@@ -24,11 +24,12 @@ export type TypoProps = {
   size?: number;
   color?: string;
   font?:
-    | "Fustat_ExtraBold_800"
-    | "Fustat_Bold_700"
-    | "Fustat_SemiBold_600"
-    | "Fustat_Medium_500"
-    | "Fustat_Regular_400";
+    | "Inter_black"
+    | "Inter_extraBold"
+    | "Inter_bold"
+    | "Inter_semiBold"
+    | "Inter_medium"
+    | "Inter_regular";
   fontWeight?: TextStyle["fontWeight"];
   children: React.ReactNode;
   style?: TextStyle;

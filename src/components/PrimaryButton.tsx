@@ -17,7 +17,7 @@ const PrimaryButton = ({
       onPress={onPress}
       style={[styles.button, { width, backgroundColor: bg_color }, style]}
     >
-      <Typo font="Fustat_Bold_700" size={16} color={text_color}>
+      <Typo font="Inter_semiBold" size={16} color={text_color}>
         {children}
       </Typo>
     </TouchableOpacity>

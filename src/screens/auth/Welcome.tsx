@@ -3,44 +3,34 @@ import Typo from "@/components/Typo";
 import { IMAGES, ROUTES } from "@/constants";
 import { colors } from "@/constants/colors";
 import React from "react";
-import {
-  Image,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Animated, { FadeIn } from "react-native-reanimated";
+import { Image, ImageBackground, TouchableOpacity, View } from "react-native";
 
 const Welcome = ({ navigation }: any) => {
   return (
-    <ImageBackground source={IMAGES.Welcome_bg} style={styles.bg}>
-      <View style={styles.container}>
+    <ImageBackground source={IMAGES.Welcome_bg} className="flex-1">
+      <View className="flex-1 items-center justify-between">
+        <View className="flex-1"></View>
+        <View className="flex-1"></View>
+        <View className="flex-1"></View>
         {/* Logo and brandings */}
-        <Animated.View
-          entering={FadeIn.duration(700)}
-          style={styles.logoSection}
-        >
+        <View className="items-center">
           <Image
             source={IMAGES.BrandLogo}
-            style={styles.logo}
+            style={{ width: 280, height: 80 }}
             resizeMode="contain"
           />
           <Typo
-            font="Fustat_Bold_700"
-            size={18}
+            font="Inter_medium"
+            size={16}
             color={colors.white}
-            style={styles.tagline}
+            className="pt-[16px]"
           >
             Connect. Celebrate. Repeat Together
           </Typo>
-        </Animated.View>
+        </View>
 
         {/* Auth Buttons */}
-        <Animated.View
-          entering={FadeIn.duration(900)}
-          style={styles.buttonSection}
-        >
+        <View className="flex gap-y-4 mt-8 items-center">
           <PrimaryButton
             width={268}
             onPress={() => navigation.navigate(ROUTES.SIGNUP)}
@@ -52,73 +42,25 @@ const Welcome = ({ navigation }: any) => {
             bg_color={colors.background}
             text_color={colors.black}
             onPress={() => navigation.navigate(ROUTES.LOGIN)}
-            style={styles.loginButton}
           >
             Log in
           </PrimaryButton>
-        </Animated.View>
+        </View>
+        <TouchableOpacity onPress={() => {}}>
+          <Typo
+            color={colors.white}
+            font="Inter_medium"
+            size={14}
+            className="mt-6"
+          >
+            About Together
+          </Typo>
+        </TouchableOpacity>
 
-        {/* About Together */}
-        <Animated.View
-          entering={FadeIn.duration(1100)}
-          style={styles.aboutSection}
-        >
-          <TouchableOpacity onPress={() => navigation.navigate("")}>
-            <Typo
-              color={colors.white}
-              font="Fustat_Bold_700"
-              size={16}
-              style={styles.aboutText}
-            >
-              About Together
-            </Typo>
-          </TouchableOpacity>
-        </Animated.View>
+        <View className="flex-1"></View>
       </View>
     </ImageBackground>
   );
 };
-
-const styles = StyleSheet.create({
-  bg: {
-    flex: 1,
-    justifyContent: "center",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 24,
-    paddingVertical: 32,
-  },
-  logoSection: {
-    alignItems: "center",
-    marginBottom: 48,
-  },
-  logo: {
-    width: 250,
-    height: 80,
-  },
-  tagline: {
-    paddingTop: 16,
-    textAlign: "center",
-  },
-  buttonSection: {
-    width: "100%",
-    alignItems: "center",
-    marginBottom: 32,
-  },
-  loginButton: {
-    marginTop: 16,
-  },
-  aboutSection: {
-    alignItems: "center",
-    marginTop: 24,
-  },
-  aboutText: {
-    marginTop: 8,
-    textAlign: "center",
-  },
-});
 
 export default Welcome;
