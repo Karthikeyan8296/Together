@@ -15,6 +15,22 @@ const TabNavigation = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
+        tabBarStyle: {
+          flexDirection: "row",
+          justifyContent: "space-evenly",
+          paddingHorizontal: 60, //spacing btw the tabs
+          borderTopLeftRadius: 24,
+          borderTopRightRadius: 24,
+          height: 76,
+          borderTopWidth: 0.5,
+          elevation: 0,
+          shadowColor: "transparent",
+          shadowOffset: { width: 0, height: 0 },
+          shadowOpacity: 0,
+          shadowRadius: 0,
+          paddingBottom: 20,
+          paddingTop: 16,
+        },
         tabBarActiveTintColor: "#7690E4",
         tabBarInactiveTintColor: "#3A4155",
         tabBarButton: (props) => (

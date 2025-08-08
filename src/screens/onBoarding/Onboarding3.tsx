@@ -1,6 +1,5 @@
 import Header from "@/components/Header";
 import InputField from "@/components/InputField";
-import LocationPicker from "@/components/LocationPicker";
 import PrimaryButton from "@/components/PrimaryButton";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
@@ -9,22 +8,21 @@ import { ChevronLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import { View } from "react-native";
 
-const OnBoarding1 = ({ navigation }: any) => {
-  const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+const Onboarding3 = ({ navigation }: any) => {
+  const [companyName, setCompanyName] = useState("");
+  const [designation, setDesignation] = useState("");
+  const [yearOfExperience, setYearOfExperience] = useState("");
 
   const isAllFilled =
-    fullName.trim() !== "" &&
-    phoneNumber.replace(/\D/g, "").length === 10 &&
-    selectedLocation !== null;
+    companyName.trim() !== "" &&
+    designation.trim() !== "" &&
+    yearOfExperience.trim() !== "";
 
   const handleContinue = () => {
     if (isAllFilled) {
-      navigation.navigate(ROUTES.ONBOARDING_2);
+      navigation.navigate(ROUTES.TAB_NAVIAGATION);
     }
   };
-
   return (
     <ScreenWrapper>
       <Header
@@ -38,23 +36,22 @@ const OnBoarding1 = ({ navigation }: any) => {
       />
       <View className="mx-8">
         <Typo font="Inter_extraBold" size={20}>
-          Tell Us About You
+          Your Work Experience
         </Typo>
         <Typo font="Inter_medium" size={14}>
-          Share your basic details so we can personalize your experience.
+          Highlight your role so the right opportunities find you at the event.
         </Typo>
       </View>
 
-      {/* Content */}
-      <View className="mx-8 mt-6">
-        <View>
+      <View className="mx-8">
+        <View className="mt-6">
           <Typo className="mb-1" font="Inter_semiBold" size={16}>
-            Full Name
+            Company name
           </Typo>
           <InputField
-            value={fullName}
-            onChangeText={(value) => setFullName(value)}
-            placeholder="Enter your full name"
+            value={companyName}
+            onChangeText={(value) => setCompanyName(value)}
+            placeholder="e.g., Infosys, Google"
             state={"default"}
             helperText={""}
           />
@@ -62,14 +59,12 @@ const OnBoarding1 = ({ navigation }: any) => {
 
         <View className="mt-6">
           <Typo className="mb-1" font="Inter_semiBold" size={16}>
-            Phone Number
+            Designation
           </Typo>
           <InputField
-            value={phoneNumber}
-            onChangeText={(value) => setPhoneNumber(value)}
-            placeholder="+91  XXXXX-XXXXX"
-            keyboardType="phone-pad"
-            maxLength={10}
+            value={designation}
+            onChangeText={(value) => setDesignation(value)}
+            placeholder="e.g., Software Engineer, Product Manager"
             state={"default"}
             helperText={""}
           />
@@ -77,11 +72,16 @@ const OnBoarding1 = ({ navigation }: any) => {
 
         <View className="mt-6">
           <Typo className="mb-1" font="Inter_semiBold" size={16}>
-            Location
+            Years of Experience
           </Typo>
-          <LocationPicker
-            selected={selectedLocation}
-            setSelected={setSelectedLocation}
+          <InputField
+            value={yearOfExperience}
+            onChangeText={(value) => setYearOfExperience(value)}
+            placeholder="e.g., 5"
+            state={"default"}
+            keyboardType="number-pad"
+            maxLength={2}
+            helperText={""}
           />
         </View>
 
@@ -99,4 +99,4 @@ const OnBoarding1 = ({ navigation }: any) => {
   );
 };
 
-export default OnBoarding1;
+export default Onboarding3;

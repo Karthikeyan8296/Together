@@ -11,4 +11,6 @@ export default {
   TAB_NAVIAGATION: "Tab Navigation stack",
   ONBOARDING_WELCOME: "Onboarding Welcome",
   ONBOARDING_1: "Onboarding 1",
+  ONBOARDING_2: "Onboarding 2",
+  ONBOARDING_3: "Onboarding 3",
 };

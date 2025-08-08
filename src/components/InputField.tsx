@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    fontFamily: "font-Fustat_SemiBold_600",
-    color: "#3A4155",
+    fontFamily: "Inter_regular",
+    color: colors.text_primary,
   },
   helperText: {
     marginTop: 4,
