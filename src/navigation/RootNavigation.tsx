@@ -3,8 +3,8 @@ import { RootState } from "@/redux/store";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { useSelector } from "react-redux";
+import AppNavigation from "./AppNavigation";
 import AuthNavigation from "./AuthNavigation";
-import OnBoardingNavigation from "./OnBoardingNavigation";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,7 +13,7 @@ const RootNavigation = () => {
 
   // Choose initial route based on auth state
   const initialRoute =
-    token && user ? ROUTES.ONBOARDINGSTACK : ROUTES.AUTHSTACK;
+    token && user ? ROUTES.APP_NAVIAGATION_STACK : ROUTES.AUTHSTACK;
 
   return (
     <Stack.Navigator
@@ -22,8 +22,8 @@ const RootNavigation = () => {
     >
       <Stack.Screen name={ROUTES.AUTHSTACK} component={AuthNavigation} />
       <Stack.Screen
-        name={ROUTES.ONBOARDINGSTACK}
-        component={OnBoardingNavigation}
+        name={ROUTES.APP_NAVIAGATION_STACK}
+        component={AppNavigation}
       />
     </Stack.Navigator>
   );

@@ -1,8 +1,6 @@
+import API from "@/config/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const API_BASE = "http://192.168.69.184:5500/api/v1/auth";
 
 interface AuthState {
   email: string | null;
@@ -29,7 +27,7 @@ export const sendOtp = createAsyncThunk<
   { rejectValue: string }
 >("auth/sendOtp", async (email, thunkAPI) => {
   try {
-    const res = await axios.post(`${API_BASE}/send-otp`, { email });
+    const res = await API.post("auth/send-otp", { email });
     console.log("sendOtp success:", res.data);
     return email;
   } catch (err: any) {
@@ -47,7 +45,7 @@ export const verifyEmail = createAsyncThunk<
   { rejectValue: string }
 >("auth/verifyEmail", async ({ email, otp }, thunkAPI) => {
   try {
-    const res = await axios.post(`${API_BASE}/verify-email`, { email, otp });
+    const res = await API.post("auth/verify-email", { email, otp });
     console.log("verifyEmail success:", res.data);
     return res.data.signupToken;
   } catch (err: any) {
@@ -65,7 +63,7 @@ export const signUpUser = createAsyncThunk<
   { rejectValue: string }
 >("auth/signUp", async ({ signupToken, password }, thunkAPI) => {
   try {
-    const res = await axios.post(`${API_BASE}/sign-up`, {
+    const res = await API.post("auth/sign-up", {
       signupToken,
       password,
     });
@@ -86,7 +84,7 @@ export const loginUser = createAsyncThunk<
   { rejectValue: string }
 >("auth/login", async ({ email, password }, thunkAPI) => {
   try {
-    const res = await axios.post(`${API_BASE}/login`, { email, password });
+    const res = await API.post("auth/login", { email, password });
     console.log("loginUser success:", res.data);
     return { user: res.data.user, token: res.data.token };
   } catch (err: any) {
@@ -143,8 +141,9 @@ const authSlice = createSlice({
     //Signup
     builder
       .addCase(signUpUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+        state.user = action.payload.user; //store the user in redux
         state.token = action.payload.token;
+        state.email = action.payload.user.email; //store the email in redux
         state.loading = false;
 
         //Saving the token and user data to AsyncStorage after login/signup
@@ -165,6 +164,7 @@ const authSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.user = action.payload.user;
         state.token = action.payload.token;
+        state.email = action.payload.user.email; //store the email in redux
         state.loading = false;
 
         //Persist token and user

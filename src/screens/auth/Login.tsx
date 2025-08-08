@@ -79,7 +79,7 @@ const Login = ({ navigation }: any) => {
       await AsyncStorage.setItem("token", token);
       await AsyncStorage.setItem("user", JSON.stringify(user));
 
-      navigation.replace(ROUTES.ONBOARDINGSTACK);
+      navigation.replace(ROUTES.APP_NAVIAGATION_STACK);
     } catch (err: any) {
       console.log("Login error: ", err);
       Toast.show({

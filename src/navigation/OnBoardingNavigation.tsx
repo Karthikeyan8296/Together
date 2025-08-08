@@ -12,7 +12,7 @@ const OnBoardingNavigation = () => {
         name={ROUTES.ONBOARDING_WELCOME}
         component={OnbaordingWelcome}
       />
-      <Stack.Screen name={ROUTES.ONBOARDING1} component={Onbaording1} />
+      <Stack.Screen name={ROUTES.ONBOARDING_1} component={Onbaording1} />
     </Stack.Navigator>
   );
 };

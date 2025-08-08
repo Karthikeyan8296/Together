@@ -7,6 +7,8 @@ export default {
 
   //OnBoarding stack
   ONBOARDINGSTACK: "Onboarding stack",
+  APP_NAVIAGATION_STACK: "App Navigation stack",
+  TAB_NAVIAGATION: "Tab Navigation stack",
   ONBOARDING_WELCOME: "Onboarding Welcome",
-  ONBOARDING1: "Onboarding 1",
+  ONBOARDING_1: "Onboarding 1",
 };
