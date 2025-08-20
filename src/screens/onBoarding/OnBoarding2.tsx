@@ -5,13 +5,24 @@ import PrimaryButton from "@/components/PrimaryButton";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { ROUTES } from "@/constants";
+import {
+  selectOnboarding,
+  setProfessionalProfile,
+} from "@/redux/slices/onboardingSlice";
+import { AppDispatch } from "@/redux/store";
 import { ChevronLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import { View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 const OnBoarding2 = ({ navigation }: any) => {
-  const [linkedin, setLinkedin] = useState("");
-  const [selectedExpertise, setSelectedExpertise] = useState<string[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const data = useSelector(selectOnboarding);
+
+  const [linkedin, setLinkedin] = useState(data.linkedin);
+  const [selectedExpertise, setSelectedExpertise] = useState<string[]>(
+    data.expertise
+  );
 
   const ExpertiseOptions = [
     { label: "Mobile App Dev", value: "Mobile App Dev" },
@@ -37,10 +48,16 @@ const OnBoarding2 = ({ navigation }: any) => {
     { label: "Marketing", value: "Marketing" },
   ];
 
-  const isAllFilled = linkedin.trim() !== "" && selectedExpertise !== null;
+  const isAllFilled = linkedin.trim() !== "" && selectedExpertise.length > 0;
 
   const handleContinue = () => {
     if (isAllFilled) {
+      dispatch(
+        setProfessionalProfile({
+          linkedin,
+          expertise: selectedExpertise,
+        })
+      );
       navigation.navigate(ROUTES.ONBOARDING_3);
     }
   };

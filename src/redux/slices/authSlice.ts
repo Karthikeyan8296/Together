@@ -1,11 +1,13 @@
 import API from "@/config/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import type { RootState } from "@/redux/store";
+import { clearSession, loadSession, saveSession } from "@/util/tokenService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface AuthState {
   email: string | null;
   signupToken: string | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   user: any | null;
   loading: boolean;
   error: string | null;
@@ -14,7 +16,8 @@ interface AuthState {
 const initialState: AuthState = {
   email: null,
   signupToken: null,
-  token: null,
+  accessToken: null,
+  refreshToken: null,
   user: null,
   loading: false,
   error: null,
@@ -58,7 +61,7 @@ export const verifyEmail = createAsyncThunk<
 
 //signup
 export const signUpUser = createAsyncThunk<
-  { user: any; token: string }, //return type
+  { user: any; accessToken: string; refreshToken: string }, //return type
   { signupToken: string; password: string }, //input type
   { rejectValue: string }
 >("auth/signUp", async ({ signupToken, password }, thunkAPI) => {
@@ -68,7 +71,7 @@ export const signUpUser = createAsyncThunk<
       password,
     });
     console.log("signUpUser success:", res.data);
-    return { user: res.data.user, token: res.data.token };
+    return res.data;
   } catch (err: any) {
     console.log("signUpUser error:", err.response?.data);
     return thunkAPI.rejectWithValue(
@@ -79,33 +82,61 @@ export const signUpUser = createAsyncThunk<
 
 //login
 export const loginUser = createAsyncThunk<
-  { user: any; token: string }, //return type
+  { user: any; accessToken: string; refreshToken: string }, //return type
   { email: string; password: string }, // input type
   { rejectValue: string }
 >("auth/login", async ({ email, password }, thunkAPI) => {
   try {
     const res = await API.post("auth/login", { email, password });
     console.log("loginUser success:", res.data);
-    return { user: res.data.user, token: res.data.token };
+    return res.data;
   } catch (err: any) {
     console.log("loginUser error:", err.response?.data);
     return thunkAPI.rejectWithValue(err.response?.data.error || "Login failed");
   }
 });
 
+//logout
+export const logoutUser = createAsyncThunk<void, void>(
+  "auth/logoutUser",
+  async () => {
+    try {
+      const { refreshToken } = await loadSession();
+      if (refreshToken) {
+        await API.post("auth/logout", { refreshToken });
+      }
+    } catch {
+      // ignore
+    } finally {
+      await clearSession();
+    }
+  }
+);
+
+//persist the updated user
+export const persistAuth = createAsyncThunk<void, void, { state: RootState }>(
+  "auth/persistAuth",
+  async (_, { getState }) => {
+    const { auth } = getState();
+    if (auth.user && auth.accessToken && auth.refreshToken) {
+      await saveSession(auth.user, auth.accessToken, auth.refreshToken);
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    logout: (state) => {
-      state.user = null;
-      state.token = null;
-      state.email = null;
-      state.signupToken = null;
-    },
     setAuthFromStorage: (state, action) => {
-      state.token = action.payload.token;
-      state.user = action.payload.user;
+      const { user, accessToken, refreshToken } = action.payload;
+      state.user = user;
+      state.email = user?.email ?? null;
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
+    },
+    markOnboarded: (state) => {
+      if (state.user) state.user.isOnboarded = true;
     },
   },
   extraReducers: (builder) => {
@@ -141,15 +172,20 @@ const authSlice = createSlice({
     //Signup
     builder
       .addCase(signUpUser.fulfilled, (state, action) => {
-        state.user = action.payload.user; //store the user in redux
-        state.token = action.payload.token;
-        state.email = action.payload.user.email; //store the email in redux
+        const { user, accessToken, refreshToken } = action.payload;
+        // signup usually doesn't return isOnboarded; default to false
+        const mergedUser = {
+          ...user,
+          isOnboarded: Boolean(user?.isOnboarded ?? false),
+        };
+        state.user = mergedUser;
+        state.accessToken = accessToken;
+        state.refreshToken = refreshToken;
+        state.email = user.email; //store the email in redux
         state.loading = false;
 
-        //Saving the token and user data to AsyncStorage after login/signup
-        //Persist token and user
-        AsyncStorage.setItem("token", action.payload.token);
-        AsyncStorage.setItem("user", JSON.stringify(action.payload.user));
+        //Persist signup and user
+        saveSession(mergedUser, accessToken, refreshToken);
       })
       .addCase(signUpUser.rejected, (state, action) => {
         state.loading = false;
@@ -162,21 +198,38 @@ const authSlice = createSlice({
         state.error = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.email = action.payload.user.email; //store the email in redux
+        const { user, accessToken, refreshToken, isOnboarded } =
+          action.payload as any;
+        const mergedUser = {
+          ...user,
+          isOnboarded: Boolean(isOnboarded ?? user?.isOnboarded),
+        };
+        state.user = mergedUser;
+        state.accessToken = accessToken;
+        state.refreshToken = refreshToken;
+        state.email = user.email; //store the email in redux
         state.loading = false;
 
-        //Persist token and user
-        AsyncStorage.setItem("token", action.payload.token);
-        AsyncStorage.setItem("user", JSON.stringify(action.payload.user));
+        //Persist login and user
+        saveSession(mergedUser, accessToken, refreshToken);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload ?? "Login failed";
       });
+
+    //Logout
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.user = null;
+      state.email = null;
+      state.accessToken = null;
+      state.refreshToken = null;
+      state.signupToken = null;
+      state.loading = false;
+      state.error = null;
+    });
   },
 });
 
-export const { logout, setAuthFromStorage } = authSlice.actions;
+export const { setAuthFromStorage, markOnboarded } = authSlice.actions;
 export default authSlice.reducer;

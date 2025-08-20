@@ -8,7 +8,6 @@ import { colors } from "@/constants/colors";
 import { loginUser } from "@/redux/slices/authSlice";
 import { AppDispatch } from "@/redux/store";
 import { toastConfig } from "@/util/toastConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ChevronLeft } from "lucide-react-native";
 import React, { useRef, useState } from "react";
 import { ActivityIndicator, Image, ScrollView, View } from "react-native";
@@ -71,13 +70,7 @@ const Login = ({ navigation }: any) => {
       setLoading(true);
 
       //login api hit
-      const result = await dispatch(loginUser({ email, password })).unwrap();
-
-      const { user, token } = result;
-
-      //persist login setup
-      await AsyncStorage.setItem("token", token);
-      await AsyncStorage.setItem("user", JSON.stringify(user));
+      await dispatch(loginUser({ email, password })).unwrap();
 
       navigation.replace(ROUTES.APP_NAVIAGATION_STACK);
     } catch (err: any) {

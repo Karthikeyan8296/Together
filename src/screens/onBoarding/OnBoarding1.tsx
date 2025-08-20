@@ -5,14 +5,22 @@ import PrimaryButton from "@/components/PrimaryButton";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { ROUTES } from "@/constants";
+import { selectOnboarding, setBasicInfo } from "@/redux/slices/onboardingSlice";
+import { AppDispatch } from "@/redux/store";
 import { ChevronLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import { View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 
 const OnBoarding1 = ({ navigation }: any) => {
-  const [fullName, setFullName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
+  const data = useSelector(selectOnboarding);
+
+  const [fullName, setFullName] = useState(data.fullName);
+  const [phoneNumber, setPhoneNumber] = useState(data.phoneNumber);
+  const [selectedLocation, setSelectedLocation] = useState<string | null>(
+    data.location
+  );
 
   const isAllFilled =
     fullName.trim() !== "" &&
@@ -21,6 +29,13 @@ const OnBoarding1 = ({ navigation }: any) => {
 
   const handleContinue = () => {
     if (isAllFilled) {
+      dispatch(
+        setBasicInfo({
+          fullName,
+          phoneNumber,
+          location: selectedLocation as string,
+        })
+      );
       navigation.navigate(ROUTES.ONBOARDING_2);
     }
   };

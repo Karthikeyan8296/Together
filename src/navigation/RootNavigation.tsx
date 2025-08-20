@@ -9,22 +9,19 @@ import AuthNavigation from "./AuthNavigation";
 const Stack = createNativeStackNavigator();
 
 const RootNavigation = () => {
-  const { token, user } = useSelector((state: RootState) => state.auth);
-
-  // Choose initial route based on auth state
-  const initialRoute =
-    token && user ? ROUTES.APP_NAVIAGATION_STACK : ROUTES.AUTHSTACK;
+  const { accessToken, user } = useSelector((state: RootState) => state.auth);
+  const isAuthed = !!accessToken && !!user;
 
   return (
-    <Stack.Navigator
-      initialRouteName={initialRoute}
-      screenOptions={{ headerShown: false }}
-    >
-      <Stack.Screen name={ROUTES.AUTHSTACK} component={AuthNavigation} />
-      <Stack.Screen
-        name={ROUTES.APP_NAVIAGATION_STACK}
-        component={AppNavigation}
-      />
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {isAuthed ? (
+        <Stack.Screen
+          name={ROUTES.APP_NAVIAGATION_STACK}
+          component={AppNavigation}
+        />
+      ) : (
+        <Stack.Screen name={ROUTES.AUTHSTACK} component={AuthNavigation} />
+      )}
     </Stack.Navigator>
   );
 };

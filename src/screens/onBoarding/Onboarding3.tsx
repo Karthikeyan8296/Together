@@ -3,24 +3,69 @@ import InputField from "@/components/InputField";
 import PrimaryButton from "@/components/PrimaryButton";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
-import { ROUTES } from "@/constants";
+import { markOnboarded, persistAuth } from "@/redux/slices/authSlice";
+import {
+  clearOnboarding,
+  selectOnboarding,
+  setWorkExperience,
+  submitOnboarding,
+} from "@/redux/slices/onboardingSlice";
+import { AppDispatch } from "@/redux/store";
 import { ChevronLeft } from "lucide-react-native";
 import React, { useState } from "react";
 import { View } from "react-native";
+import Toast from "react-native-toast-message";
+import { useDispatch, useSelector } from "react-redux";
 
 const Onboarding3 = ({ navigation }: any) => {
-  const [companyName, setCompanyName] = useState("");
-  const [designation, setDesignation] = useState("");
-  const [yearOfExperience, setYearOfExperience] = useState("");
+  const dispatch = useDispatch<AppDispatch>();
+  const data = useSelector(selectOnboarding);
+
+  const [companyName, setCompanyName] = useState(data.companyName);
+  const [designation, setDesignation] = useState(data.designation);
+  const [yearOfExperience, setYearOfExperience] = useState(
+    data.yearOfExperience?.toString() ?? ""
+  );
 
   const isAllFilled =
     companyName.trim() !== "" &&
     designation.trim() !== "" &&
     yearOfExperience.trim() !== "";
 
-  const handleContinue = () => {
-    if (isAllFilled) {
-      navigation.navigate(ROUTES.TAB_NAVIAGATION);
+  const handleContinue = async () => {
+    if (!isAllFilled) return;
+    const calculatedExp = Math.min(
+      99,
+      Math.max(0, Number(yearOfExperience) || 0)
+    );
+    dispatch(
+      setWorkExperience({
+        companyName,
+        designation,
+        yearOfExperience: calculatedExp,
+      })
+    );
+
+    try {
+      await dispatch(submitOnboarding()).unwrap();
+      //marking the onboarding as done!
+      dispatch(markOnboarded());
+      //persist the updated user
+      await dispatch(persistAuth()).unwrap();
+      //reset
+      dispatch(clearOnboarding());
+      Toast.show({ type: "success", text1: "Onboarding complete" });
+      // navigation.reset({
+      //   index: 0,
+      //   routes: [{ name: ROUTES.TAB_NAVIAGATION }],
+      // });
+    } catch (err: any) {
+      Toast.show({
+        topOffset: 52,
+        type: "error",
+        text1: "Failed to onboard",
+        text2: err?.toString?.() ?? "",
+      });
     }
   };
   return (

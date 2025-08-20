@@ -8,7 +8,6 @@ import { colors } from "@/constants/colors";
 import { sendOtp, signUpUser, verifyEmail } from "@/redux/slices/authSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { toastConfig } from "@/util/toastConfig";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ChevronLeft } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
@@ -121,16 +120,11 @@ const SignUp = ({ navigation }: any) => {
       }
 
       //signup API hit
-      const result = await dispatch(
+      await dispatch(
         signUpUser({ signupToken: signupToken!, password })
       ).unwrap();
 
-      const { user, token } = result;
-
-      //persist signup setup
-      await AsyncStorage.setItem("token", token);
-      await AsyncStorage.setItem("user", JSON.stringify(user));
-
+      // access token + refresh token + user are saved by the slice (saveSession). Just navigate.
       navigation.replace(ROUTES.APP_NAVIAGATION_STACK);
     } catch (err: any) {
       console.log("Error during signup:", err);
