@@ -1,9 +1,13 @@
-import Events from "@/screens/tabs/Events";
-import Home from "@/screens/tabs/Home";
-import Profile from "@/screens/tabs/Profile";
+import { CreateEvent, Discover, Home, Notification, Profile } from "@/screens";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
-import { House, PartyPopper, UserCircle } from "lucide-react-native";
+import {
+  CirclePlus,
+  Compass,
+  Heart,
+  House,
+  UserCircle,
+} from "lucide-react-native";
 import React from "react";
 
 const Tab = createBottomTabNavigator();
@@ -11,14 +15,14 @@ const Tab = createBottomTabNavigator();
 const TabNavigation = () => {
   return (
     <Tab.Navigator
-      initialRouteName={"home"}
+      initialRouteName={"Home"}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
           flexDirection: "row",
           justifyContent: "space-evenly",
-          paddingHorizontal: 60, //spacing btw the tabs
+          paddingHorizontal: 50, //spacing btw the tabs
           borderTopLeftRadius: 24,
           borderTopRightRadius: 24,
           height: 76,
@@ -44,7 +48,7 @@ const TabNavigation = () => {
       }}
     >
       <Tab.Screen
-        name={"home"}
+        name={"Home"}
         component={Home}
         // @ts-ignore
         options={({ route }) => ({
@@ -55,12 +59,34 @@ const TabNavigation = () => {
       />
 
       <Tab.Screen
-        name={"events"}
-        component={Events}
+        name={"Discover"}
+        component={Discover}
         // @ts-ignore
         options={({ route }) => ({
           tabBarIcon: ({ color }) => (
-            <PartyPopper size={24} strokeWidth={2} color={color} />
+            <Compass size={24} strokeWidth={2} color={color} />
+          ),
+        })}
+      />
+
+      <Tab.Screen
+        name={"CreateEvent"}
+        component={CreateEvent}
+        // @ts-ignore
+        options={({ route }) => ({
+          tabBarIcon: ({ color }) => (
+            <CirclePlus size={24} strokeWidth={2} color={color} />
+          ),
+        })}
+      />
+
+      <Tab.Screen
+        name={"Notification"}
+        component={Notification}
+        // @ts-ignore
+        options={({ route }) => ({
+          tabBarIcon: ({ color }) => (
+            <Heart size={24} strokeWidth={2} color={color} />
           ),
         })}
       />
