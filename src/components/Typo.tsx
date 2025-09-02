@@ -6,7 +6,7 @@ import { TypoProps } from "types";
 const Typo = ({
   size,
   color = colors.text_primary,
-  font = "Fustat_Bold_700",
+  font = "Inter_medium",
   fontWeight = "400",
   children,
   style,

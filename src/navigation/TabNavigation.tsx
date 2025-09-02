@@ -1,4 +1,6 @@
-import { CreateEvent, Discover, Home, Notification, Profile } from "@/screens";
+import { AnimatedTabBar } from "@/components/AnimatedTabBar";
+import { ROUTES } from "@/constants";
+import { CreateEvent, Discover, Notification, Profile } from "@/screens";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
 import {
@@ -9,97 +11,93 @@ import {
   UserCircle,
 } from "lucide-react-native";
 import React from "react";
+import HomeStack from "./HomeStack";
 
 const Tab = createBottomTabNavigator();
 
+const baseTabBarStyle = {
+  flexDirection: "row" as const,
+  justifyContent: "space-evenly" as const,
+  paddingHorizontal: 50,
+  borderTopLeftRadius: 24,
+  borderTopRightRadius: 24,
+  height: 76,
+  borderWidth: 1,
+  elevation: 0,
+  shadowColor: "transparent",
+  shadowOffset: { width: 0, height: 0 },
+  shadowOpacity: 0,
+  shadowRadius: 0,
+  paddingBottom: 20,
+  paddingTop: 16,
+  backgroundColor: "#fff",
+};
+
 const TabNavigation = () => {
+  const hiddenRoutes = [ROUTES.ONBOARDINGSTACK];
+
   return (
     <Tab.Navigator
-      initialRouteName={"Home"}
+      initialRouteName={ROUTES.HOME_STACK}
+      // Use animated tab bar instead of the default one
+      tabBar={(props) => (
+        <AnimatedTabBar {...props} hiddenRoutes={hiddenRoutes} />
+      )}
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarStyle: {
-          flexDirection: "row",
-          justifyContent: "space-evenly",
-          paddingHorizontal: 50, //spacing btw the tabs
-          borderTopLeftRadius: 24,
-          borderTopRightRadius: 24,
-          height: 76,
-          borderTopWidth: 0.5,
-          elevation: 0,
-          shadowColor: "transparent",
-          shadowOffset: { width: 0, height: 0 },
-          shadowOpacity: 0,
-          shadowRadius: 0,
-          paddingBottom: 20,
-          paddingTop: 16,
-        },
         tabBarActiveTintColor: "#7690E4",
         tabBarInactiveTintColor: "#3A4155",
-        tabBarButton: (props) => (
+        tabBarButton: (p) => (
           <PlatformPressable
-            {...props}
-            android_ripple={{ color: "transparent" }} // Disables the ripple effect for Android
-            pressColor="transparent" //For android
-            pressOpacity={0.3} //For ios
+            {...p}
+            android_ripple={{ color: "transparent" }}
+            pressColor="transparent"
+            pressOpacity={0.3}
           />
         ),
+        tabBarStyle: baseTabBarStyle,
       }}
     >
       <Tab.Screen
-        name={"Home"}
-        component={Home}
-        // @ts-ignore
-        options={({ route }) => ({
-          tabBarIcon: ({ color }) => (
-            <House size={24} strokeWidth={2} color={color} />
-          ),
-        })}
+        name={ROUTES.HOME_STACK}
+        component={HomeStack}
+        options={{
+          tabBarIcon: ({ color }) => <House color={color} />,
+          tabBarStyle: baseTabBarStyle,
+        }}
       />
-
       <Tab.Screen
-        name={"Discover"}
+        name={"dicover"}
         component={Discover}
-        // @ts-ignore
-        options={({ route }) => ({
-          tabBarIcon: ({ color }) => (
-            <Compass size={24} strokeWidth={2} color={color} />
-          ),
-        })}
+        options={{
+          tabBarIcon: ({ color }) => <Compass color={color} />,
+          tabBarStyle: baseTabBarStyle,
+        }}
       />
-
       <Tab.Screen
-        name={"CreateEvent"}
+        name={"event"}
         component={CreateEvent}
-        // @ts-ignore
-        options={({ route }) => ({
-          tabBarIcon: ({ color }) => (
-            <CirclePlus size={24} strokeWidth={2} color={color} />
-          ),
-        })}
+        options={{
+          tabBarIcon: ({ color }) => <CirclePlus color={color} />,
+          tabBarStyle: baseTabBarStyle,
+        }}
       />
-
       <Tab.Screen
-        name={"Notification"}
+        name={"notification"}
         component={Notification}
-        // @ts-ignore
-        options={({ route }) => ({
-          tabBarIcon: ({ color }) => (
-            <Heart size={24} strokeWidth={2} color={color} />
-          ),
-        })}
+        options={{
+          tabBarIcon: ({ color }) => <Heart color={color} />,
+          tabBarStyle: baseTabBarStyle,
+        }}
       />
-
       <Tab.Screen
         name={"profile"}
         component={Profile}
-        // @ts-ignore
-        options={({ route }) => ({
-          tabBarIcon: ({ color }) => (
-            <UserCircle size={24} strokeWidth={2} color={color} />
-          ),
-        })}
+        options={{
+          tabBarIcon: ({ color }) => <UserCircle color={color} />,
+          tabBarStyle: baseTabBarStyle,
+        }}
       />
     </Tab.Navigator>
   );
