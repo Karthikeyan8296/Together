@@ -56,3 +56,9 @@ export async function getHostedEvents(): Promise<Event[]> {
   const res = await API.get<Event[]>("/event/hosted");
   return res.data;
 }
+
+//Create Event
+export async function createEvent(eventData: Partial<Event>): Promise<Event> {
+  const res = await API.post<Event>("/event", eventData);
+  return res.data;
+}

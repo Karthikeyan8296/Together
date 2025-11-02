@@ -3,12 +3,8 @@ import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { ROUTES } from "@/constants";
 import { colors } from "@/constants/colors";
-import { useFetchData } from "@/hooks/useFetchData";
-import {
-  Event,
-  getHostedEvents,
-  getRegisteredEvents,
-} from "@/service/eventService";
+import { getHostedEvents, getRegisteredEvents } from "@/service/eventService";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronLeft } from "lucide-react-native";
 import React, { useMemo, useState } from "react";
 import {
@@ -22,19 +18,21 @@ import SegmentedControlTab from "react-native-segmented-control-tab";
 
 const AllEvents = ({ navigation }: any) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  // fetcher switches based on tab; deps ensure refetch on tab change
-  const { data, loading, error, refetch } = useFetchData<Event[]>(
-    () => (activeIndex === 0 ? getRegisteredEvents() : getHostedEvents()),
-    [activeIndex]
-  );
+  const isGoing = activeIndex === 0;
+
+  const { data, isLoading, isFetching, error, refetch } = useQuery({
+    queryKey: ["events", isGoing ? "registered" : "hosted"],
+    queryFn: () => (isGoing ? getRegisteredEvents() : getHostedEvents()),
+    placeholderData: (prev) => prev, //keep the previous data
+  });
 
   const events = useMemo(
     () =>
       (data ?? []).map((e) => ({
         ...e,
-        role: activeIndex === 0 ? ("Going" as const) : ("Hosting" as const),
+        role: isGoing ? ("Going" as const) : ("Hosting" as const),
       })),
-    [data, activeIndex]
+    [data, isGoing]
   );
 
   return (
@@ -59,19 +57,19 @@ const AllEvents = ({ navigation }: any) => {
           onTabPress={setActiveIndex}
         />
 
-        {loading && <ActivityIndicator />}
-        {error !== "" && (
+        {isLoading && <ActivityIndicator />}
+        {error && (
           <Typo size={14} className="text-red-500">
-            {error}
+            {error instanceof Error ? error.message : "Something went wrong"}
           </Typo>
         )}
 
         <FlatList
-          key={activeIndex}
           data={events}
           keyExtractor={(item) => item._id}
-          refreshing={loading}
+          refreshing={isFetching}
           onRefresh={refetch}
+          className="mt-6"
           renderItem={({ item }) => (
             <TouchableOpacity
               className="flex-row mb-4 bg-white rounded-2xl p-3 shadow"

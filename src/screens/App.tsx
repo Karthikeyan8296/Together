@@ -1,7 +1,13 @@
 import { store } from "@/redux/store";
 import { NavigationContainer } from "@react-navigation/native";
+import {
+  focusManager,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 import { useFonts } from "expo-font";
 import React from "react";
+import { AppState } from "react-native";
 import Toast from "react-native-toast-message";
 import { Provider } from "react-redux";
 import "../../global.css";
@@ -21,15 +27,42 @@ const App = () => {
   });
   if (!fontLoaded) return null;
 
+  //TODO: need to take dev build again to make this work
+  // onlineManager.setEventListener((setOnline) =>
+  //   NetInfo.addEventListener((state) => setOnline(!!state.isConnected))
+  // );
+
+  focusManager.setEventListener((handleFocus) => {
+    const subscribe = AppState.addEventListener("change", (status) =>
+      handleFocus(status === "active")
+    );
+    return () => subscribe.remove();
+  });
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        //how long data is considered fresh
+        staleTime: 10_000,
+        //cache time before garbage collection
+        gcTime: 5 * 60 * 1000,
+        //automatic retry on failure
+        retry: 1,
+      },
+    },
+  });
+
   return (
-    <Provider store={store}>
-      <>
-        <NavigationContainer>
-          <RestoredApp />
-        </NavigationContainer>
-        <Toast />
-      </>
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <>
+          <NavigationContainer>
+            <RestoredApp />
+          </NavigationContainer>
+          <Toast />
+        </>
+      </Provider>
+    </QueryClientProvider>
   );
 };
 

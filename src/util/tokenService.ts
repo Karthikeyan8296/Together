@@ -27,6 +27,10 @@ export const loadSession = async () => {
   const accessToken = storage.getString(ACCESS_KEY);
   const refreshToken = storage.getString(REFRESH_KEY);
 
+  console.log("saved user", user);
+  console.log("saved access Token", accessToken);
+  console.log("saved refresh Token", refreshToken);
+
   return {
     user: user ? JSON.parse(user) : null,
     accessToken: accessToken || null,

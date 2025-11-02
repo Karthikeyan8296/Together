@@ -2,8 +2,8 @@ import { CenterHeader } from "@/components/CenterHeader";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { ROUTES } from "@/constants";
-import { useFetchData } from "@/hooks/useFetchData";
-import { getYourEvents, YourEventsResponse } from "@/service/eventService";
+import { getYourEvents } from "@/service/eventService";
+import { useQuery } from "@tanstack/react-query";
 import { ChevronRight, Settings } from "lucide-react-native";
 import React from "react";
 import {
@@ -15,16 +15,13 @@ import {
 } from "react-native";
 
 const Home = ({ navigation }: any) => {
-  /**
-  $ Run this effect only once when the component first mounts - []
-  $ if I remove this [] it will keep calling the api again and again
-  $ if [userId], Run when userId changes, Fetch user-specific data
- */
+  //Instead of using useFetchData hook, we use tanstack query
+  const { data, isLoading, error, refetch, isRefetching } = useQuery({
+    queryKey: ["yourEvents"],
+    queryFn: getYourEvents,
+  });
 
-  const { data, loading, error } = useFetchData<YourEventsResponse>(
-    getYourEvents,
-    []
-  );
+  console.log(data?.hostedEvents);
 
   const events = [
     ...(data?.hostedEvents.map((e) => ({ ...e, role: "Hosting" })) || []),
@@ -57,15 +54,17 @@ const Home = ({ navigation }: any) => {
           </TouchableOpacity>
         </View>
 
-        {loading && <ActivityIndicator />}
+        {isLoading && <ActivityIndicator />}
         {error && (
           <Typo size={14} className="text-red-500">
-            {error}
+            {error.message}
           </Typo>
         )}
 
         <FlatList
           data={events}
+          onRefresh={refetch}
+          refreshing={isRefetching}
           keyExtractor={(item) => item._id}
           renderItem={({ item }) => (
             <TouchableOpacity
