@@ -1,12 +1,16 @@
 import Header from "@/components/Header";
 import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
-import API from "@/config/api";
 import { ROUTES } from "@/constants";
 import { colors } from "@/constants/colors";
-import SegmentedControl from "@react-native-segmented-control/segmented-control";
+import { useFetchData } from "@/hooks/useFetchData";
+import {
+  Event,
+  getHostedEvents,
+  getRegisteredEvents,
+} from "@/service/eventService";
 import { ChevronLeft } from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -14,36 +18,24 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import SegmentedControlTab from "react-native-segmented-control-tab";
 
 const AllEvents = ({ navigation }: any) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [loading, setLoading] = useState(false);
-  const [events, setEvents] = useState<any[]>([]);
-  const [error, setError] = useState("");
+  // fetcher switches based on tab; deps ensure refetch on tab change
+  const { data, loading, error, refetch } = useFetchData<Event[]>(
+    () => (activeIndex === 0 ? getRegisteredEvents() : getHostedEvents()),
+    [activeIndex]
+  );
 
-  const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const endpoint =
-        activeIndex === 0 ? "/event/registered" : "/event/hosted";
-      const res = await API.get(endpoint);
-
-      // add role info
-      const role = activeIndex === 0 ? "Going" : "Hosting";
-      const enriched = res.data.map((e: any) => ({ ...e, role }));
-
-      setEvents(enriched);
-    } catch (err: any) {
-      setError("Failed to load events");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchEvents();
-  }, [activeIndex]);
+  const events = useMemo(
+    () =>
+      (data ?? []).map((e) => ({
+        ...e,
+        role: activeIndex === 0 ? ("Going" as const) : ("Hosting" as const),
+      })),
+    [data, activeIndex]
+  );
 
   return (
     <ScreenWrapper>
@@ -59,25 +51,12 @@ const AllEvents = ({ navigation }: any) => {
 
       <View className="flex-1 mx-8">
         {/* Segmented View */}
-        <SegmentedControl
-          appearance="dark"
-          activeFontStyle={{
-            fontSize: 14,
-            fontFamily: "Inter_medium",
-            fontWeight: "bold",
-            color: colors.text_primary,
-          }}
-          style={{ height: 36, marginBottom: 16 }}
-          fontStyle={{
-            color: colors.white,
-          }}
-          tintColor={colors.white}
-          backgroundColor={colors.primary}
+        <SegmentedControlTab
           values={["Going", "Hosting"]}
+          activeTabStyle={{ backgroundColor: colors.primary }}
+          tabStyle={{ borderColor: colors.primary }}
           selectedIndex={activeIndex}
-          onChange={(event) => {
-            setActiveIndex(event.nativeEvent.selectedSegmentIndex);
-          }}
+          onTabPress={setActiveIndex}
         />
 
         {loading && <ActivityIndicator />}
@@ -88,8 +67,11 @@ const AllEvents = ({ navigation }: any) => {
         )}
 
         <FlatList
+          key={activeIndex}
           data={events}
           keyExtractor={(item) => item._id}
+          refreshing={loading}
+          onRefresh={refetch}
           renderItem={({ item }) => (
             <TouchableOpacity
               className="flex-row mb-4 bg-white rounded-2xl p-3 shadow"

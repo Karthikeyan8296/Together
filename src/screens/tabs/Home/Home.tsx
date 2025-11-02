@@ -3,6 +3,7 @@ import ScreenWrapper from "@/components/ScreenWrapper";
 import Typo from "@/components/Typo";
 import { ROUTES } from "@/constants";
 import { useFetchData } from "@/hooks/useFetchData";
+import { getYourEvents, YourEventsResponse } from "@/service/eventService";
 import { ChevronRight, Settings } from "lucide-react-native";
 import React from "react";
 import {
@@ -14,10 +15,16 @@ import {
 } from "react-native";
 
 const Home = ({ navigation }: any) => {
-  const { data, loading, error } = useFetchData<{
-    hostedEvents: any[];
-    registeredEvents: any[];
-  }>("/event/your-events");
+  /**
+  $ Run this effect only once when the component first mounts - []
+  $ if I remove this [] it will keep calling the api again and again
+  $ if [userId], Run when userId changes, Fetch user-specific data
+ */
+
+  const { data, loading, error } = useFetchData<YourEventsResponse>(
+    getYourEvents,
+    []
+  );
 
   const events = [
     ...(data?.hostedEvents.map((e) => ({ ...e, role: "Hosting" })) || []),
@@ -37,7 +44,7 @@ const Home = ({ navigation }: any) => {
       />
 
       <View className="flex-1 mx-8">
-        <View className="flex-row justify-between items-center py-4">
+        <View className="flex-row justify-between items-center py-6">
           <Typo font="Inter_semiBold" size={20}>
             Your events
           </Typo>

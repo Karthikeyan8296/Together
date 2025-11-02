@@ -48,7 +48,7 @@ const Login = ({ navigation }: any) => {
   const handleLogin = async () => {
     if (loading) return;
 
-    const email = emailRef.current.trim();
+    const email = emailRef.current.trim().toLowerCase();
     const password = passwordRef.current.trim();
 
     //Email

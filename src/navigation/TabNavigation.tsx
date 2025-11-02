@@ -1,5 +1,6 @@
 import { AnimatedTabBar } from "@/components/AnimatedTabBar";
 import { ROUTES } from "@/constants";
+import { colors } from "@/constants/colors";
 import { CreateEvent, Discover, Notification, Profile } from "@/screens";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { PlatformPressable } from "@react-navigation/elements";
@@ -21,7 +22,7 @@ const baseTabBarStyle = {
   paddingHorizontal: 50,
   borderTopLeftRadius: 24,
   borderTopRightRadius: 24,
-  height: 76,
+  height: 90,
   borderWidth: 1,
   elevation: 0,
   shadowColor: "transparent",
@@ -46,14 +47,13 @@ const TabNavigation = () => {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarActiveTintColor: "#7690E4",
+        tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "#3A4155",
         tabBarButton: (p) => (
           <PlatformPressable
             {...p}
             android_ripple={{ color: "transparent" }}
             pressColor="transparent"
-            pressOpacity={0.3}
           />
         ),
         tabBarStyle: baseTabBarStyle,

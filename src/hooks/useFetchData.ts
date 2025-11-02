@@ -1,32 +1,31 @@
-import API from "@/config/api";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-export function useFetchData<T>(endpoint: string) {
+export function useFetchData<T>(fetcher: () => Promise<T>, deps: any[] = []) {
   const [data, setData] = useState<T | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const alive = useRef(true);
+
+  const run = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await fetcher();
+      if (alive.current) setData(result);
+    } catch (e: any) {
+      if (alive.current) setError(e?.message || "Error fetching data");
+    } finally {
+      if (alive.current) setLoading(false);
+    }
+  }, deps);
 
   useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const res = await API.get(endpoint); // uses interceptor for token
-        if (isMounted) setData(res.data);
-      } catch (err: any) {
-        if (isMounted) setError(err.message || "Error fetching data");
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    };
-
-    fetchData();
-
+    alive.current = true;
+    run();
     return () => {
-      isMounted = false;
+      alive.current = false;
     };
-  }, [endpoint]);
+  }, [run]);
 
-  return { data, loading, error };
+  return { data, loading, error, refetch: run };
 }

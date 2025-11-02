@@ -7,17 +7,21 @@
     "icon": "./assets/images/icon.png",
     "scheme": "together",
     "userInterfaceStyle": "automatic",
-    "entryPoint": "./src/screens/index.ts",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.together",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.example.together"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +42,12 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c3739dc0-bd39-4dcb-83de-c07133f1c0d4"
+      }
+    },
+    "owner": "karthikandroid"
   }
 }

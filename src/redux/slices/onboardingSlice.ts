@@ -1,5 +1,5 @@
-import API from "@/config/api";
 import type { RootState } from "@/redux/store";
+import { createOnBoarding, OnboardingPayload } from "@/service/userService";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface OnboardingState {
@@ -38,7 +38,7 @@ export const submitOnboarding = createAsyncThunk<
 >("onboarding/submit", async (_void, thunkAPI) => {
   const state = thunkAPI.getState().onboarding;
 
-  const payload = {
+  const payload: OnboardingPayload = {
     fullName: state.fullName,
     phoneNumber: state.phoneNumber,
     location: state.location ?? "",
@@ -52,8 +52,8 @@ export const submitOnboarding = createAsyncThunk<
   };
 
   try {
-    const res = await API.post("user/onBoarding", payload);
-    return res.data;
+    const res = await createOnBoarding(payload);
+    return res;
   } catch (err: any) {
     return thunkAPI.rejectWithValue(
       err?.response?.data?.message || "Failed to complete onboarding"
