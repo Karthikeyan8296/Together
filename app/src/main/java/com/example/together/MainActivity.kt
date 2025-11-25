@@ -6,48 +6,38 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.sp
-import com.example.together.ui.theme.Inter
+import androidx.navigation.compose.rememberNavController
+import com.example.together.core.navigation.RootNavGraph
+import com.example.together.core.navigation.Routes
 import com.example.together.ui.theme.TogetherTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                Color.TRANSPARENT, //background
-                Color.BLACK //foreground
+            statusBarStyle = SystemBarStyle.dark(
+                Color.TRANSPARENT,
             )
         )
         setContent {
+            //navController
+            val navController = rememberNavController()
+
             TogetherTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(innerPadding),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text(
-                            text = "Welcome to Together",
-                            fontWeight = FontWeight.SemiBold,
-                            fontSize = 24.sp,
-                            letterSpacing = 0.sp
-                        )
-                    }
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    containerColor = androidx.compose.ui.graphics.Color(0xFF050608)
+                ) { innerPadding ->
+                    RootNavGraph(
+                        paddingValues = innerPadding,
+                        navController = navController,
+                        startDestination = Routes.AUTH_GRAPH
+                    )
                 }
             }
         }

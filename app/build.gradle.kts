@@ -2,6 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    //imported
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt.android)
 }
 
 android {
@@ -56,4 +61,26 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // Jetpack Compose navigation
+    implementation(libs.androidx.navigation.compose)
+
+    //Material icons
+    implementation(libs.androidx.material.icons.extended)
+
+    //coil image loading compose
+    implementation(libs.coil.compose)
+
+    //data store
+    implementation(libs.androidx.datastore.preferences)
+
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+
+    //lottie animations
+    implementation("com.airbnb.android:lottie-compose:6.7.1")
+
+    //status bar
+    implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
 }
