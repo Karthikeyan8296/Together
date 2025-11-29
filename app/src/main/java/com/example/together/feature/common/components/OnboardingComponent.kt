@@ -36,6 +36,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.together.R
+import com.example.together.ui.theme.backgroundPrimary
+import com.example.together.ui.theme.backgroundSecondary
+import com.example.together.ui.theme.primary
 
 @Composable
 fun OnboardingSlide(
@@ -53,7 +56,7 @@ fun OnboardingSlide(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF050608))
+            .background(backgroundPrimary)
             .padding(paddingValues)
     ) {
         Column(
@@ -90,8 +93,8 @@ private fun BottomCard(
     totalPages: Int,
     onNext: () -> Unit
 ) {
-    val cardColor = Color(0xFF101114)
-    val pillColor = Color(0xFFFFE393)
+    val cardColor = backgroundSecondary
+    val pillColor = primary
 
     Column(
         modifier = Modifier
@@ -151,7 +154,7 @@ private fun BottomCard(
             ) {
                 Icon(
                     modifier = Modifier.size(32.dp),
-                    painter = painterResource(id = R.drawable.baseline_chevron_right_24),
+                    painter = painterResource(id = R.drawable.chevron_right),
                     contentDescription = "Next",
                     tint = Color.Black
                 )

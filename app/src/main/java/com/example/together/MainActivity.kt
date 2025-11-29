@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.together.core.navigation.RootNavGraph
 import com.example.together.core.navigation.Routes
 import com.example.together.ui.theme.TogetherTheme
+import com.example.together.ui.theme.backgroundPrimary
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
             TogetherTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    containerColor = androidx.compose.ui.graphics.Color(0xFF050608)
+                    containerColor = backgroundPrimary
                 ) { innerPadding ->
                     RootNavGraph(
                         paddingValues = innerPadding,

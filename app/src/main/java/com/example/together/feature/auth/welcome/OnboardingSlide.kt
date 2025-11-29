@@ -20,7 +20,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.together.R
 import com.example.together.feature.common.components.OnboardingSlide
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.example.together.ui.theme.backgroundPrimary
+import com.example.together.ui.theme.primary
 import kotlinx.coroutines.launch
 
 data class OnboardingPage(
@@ -63,13 +64,13 @@ fun OnboardingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color(0xFF050608))
+            .background(color = backgroundPrimary)
             .padding(paddingValues)
     ) {
 
         Text(
             text = "Together",
-            color = Color.White,
+            color = primary,
             fontSize = 28.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier

@@ -1,14 +1,11 @@
 package com.example.together.core.navigation.auth
 
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
+import com.example.together.core.navigation.NavTransitions
+import com.example.together.core.navigation.Routes
 import com.example.together.feature.auth.login.LoginScreen
 import com.example.together.feature.auth.signup.SignUpScreen
 import com.example.together.feature.auth.welcome.GetStartedScreen
@@ -19,21 +16,8 @@ fun NavGraphBuilder.authNavGraph(
     paddingValues: PaddingValues
 ) {
     composable<AuthRoutes.WELCOME_ONBOARDING>(
-        exitTransition = {
-            // When navigating *away* from Onboarding (→ GetStarted)
-            scaleOut(
-                targetScale = 0.5f,
-                animationSpec = tween(500)
-            ) + fadeOut(animationSpec = tween(500))
-        },
-        popEnterTransition = {
-            // When coming *back* to Onboarding (← GetStarted)
-            scaleIn(
-                initialScale = 0.5f,
-                animationSpec = tween(500)
-            ) + fadeIn(animationSpec = tween(500))
-        }
-
+        exitTransition = NavTransitions.scaleOutToCenter,
+        popEnterTransition = NavTransitions.scaleInFromCenter
     ) {
         OnboardingScreen(
             paddingValues = paddingValues,
@@ -44,20 +28,10 @@ fun NavGraphBuilder.authNavGraph(
     }
 
     composable<AuthRoutes.GET_STARTED>(
-        enterTransition = {
-            // When navigating *to* GetStarted (from Onboarding)
-            scaleIn(
-                initialScale = 0.5f,
-                animationSpec = tween(500)
-            ) + fadeIn(animationSpec = tween(500))
-        },
-        popExitTransition = {
-            // When popping back from GetStarted (→ Onboarding)
-            scaleOut(
-                targetScale = 0.5f,
-                animationSpec = tween(500)
-            ) + fadeOut(animationSpec = tween(500))
-        }
+        exitTransition = NavTransitions.scaleOutToCenter,
+        popEnterTransition = NavTransitions.scaleInFromCenter,
+        enterTransition = NavTransitions.slideInFromRight,
+        popExitTransition = NavTransitions.slideOutToRight
     ) {
         GetStartedScreen(
             paddingValues = paddingValues,
@@ -66,11 +40,26 @@ fun NavGraphBuilder.authNavGraph(
         )
     }
 
-    composable<AuthRoutes.LOGIN_SCREEN> {
-        LoginScreen()
+    composable<AuthRoutes.LOGIN_SCREEN>(
+        exitTransition = NavTransitions.scaleOutToCenter,
+        popEnterTransition = NavTransitions.scaleInFromCenter,
+        enterTransition = NavTransitions.slideInFromRight,
+        popExitTransition = NavTransitions.slideOutToRight
+    ) {
+        LoginScreen(
+            paddingValues = paddingValues
+        )
     }
 
-    composable<AuthRoutes.SIGNUP_SCREEN> {
-        SignUpScreen()
+    composable<AuthRoutes.SIGNUP_SCREEN>(
+        exitTransition = NavTransitions.scaleOutToCenter,
+        popEnterTransition = NavTransitions.scaleInFromCenter,
+        enterTransition = NavTransitions.slideInFromRight,
+        popExitTransition = NavTransitions.slideOutToRight
+    ) {
+        SignUpScreen(
+            paddingValues = paddingValues,
+            OnSignInComplete = { navController.navigate(Routes.ONBOARDING_GRAPH) }
+        )
     }
 }
