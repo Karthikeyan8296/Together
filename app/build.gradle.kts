@@ -83,4 +83,19 @@ dependencies {
 
     //status bar
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.34.0")
+
+    //Retrofit for apis
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-moshi:2.11.0")
+    implementation ("com.squareup.moshi:moshi-kotlin:1.15.0")
+
+    //GSON converter
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    //coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+
+    //hilt navigation
+    implementation("androidx.hilt:hilt-navigation:1.1.0-alpha02")
+    implementation("androidx.hilt:hilt-navigation-compose:1.1.0-alpha01")
+
 }

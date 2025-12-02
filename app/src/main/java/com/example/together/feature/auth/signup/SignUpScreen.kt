@@ -12,11 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -25,6 +24,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.together.feature.common.components.Header
 import com.example.together.feature.common.components.InputField
 import com.example.together.feature.common.components.OtpCodeField
@@ -32,30 +33,27 @@ import com.example.together.feature.common.components.PrimaryButton
 import com.example.together.ui.theme.light_white
 import com.example.together.ui.theme.primary
 import com.example.together.ui.theme.white
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-
-private enum class SignUpStep {
-    EMAIL,
-    CODE,
-    PASSWORD,
-}
 
 @Composable
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    OnSignInComplete: () -> Unit
+    onSignInComplete: () -> Unit,
+    viewModal: SignUpViewModal = hiltViewModel()
 ) {
 
     val focusManager = LocalFocusManager.current
-    val scope = rememberCoroutineScope()
 
-    var email by remember { mutableStateOf("") }
-    var code by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var currentStep by remember { mutableStateOf(SignUpStep.EMAIL) }
-    var isLoading by remember { mutableStateOf(false) }
+    //getting the state from view modal
+    val state by viewModal.uiState.collectAsStateWithLifecycle()
+
+    //navigate once signup finished
+    LaunchedEffect(state.isSignedUp) {
+        if (state.isSignedUp) {
+            onSignInComplete()
+            viewModal.consumeSignedUpFlag()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -86,33 +84,37 @@ fun SignUpScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        when (currentStep) {
+
+        // Optional: show error text
+        state.error?.let {
+            Text(
+                text = it,
+                color = primary,
+                fontSize = 12.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+
+        when (state.currentStep) {
             SignUpStep.EMAIL -> {
                 Text(text = "Email", fontSize = 16.sp, color = white)
                 Spacer(modifier = Modifier.height(4.dp))
                 InputField(
-                    value = email,
-                    onValueChange = { email = it },
+                    value = state.email,
+                    onValueChange = viewModal::onEmailChange,
                     placeholder = "example@email.com",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 )
                 PrimaryButton(
                     text = "Continue",
                     onClick = {
-                        if (email.isNotBlank() && !isLoading) {
-                            focusManager.clearFocus()
-                            isLoading = true
-
-                            scope.launch {
-                                delay(3000)
-                                isLoading = false
-                                currentStep = SignUpStep.CODE
-                            }
-                        }
+                        focusManager.clearFocus()
+                        viewModal.submitEmail()
                     },
-                    enabled = email.isNotBlank(),
+                    enabled = state.email.isNotBlank() && !state.isLoading,
                     modifier = Modifier.padding(top = 20.dp),
-                    isLoading = isLoading
+                    isLoading = state.isLoading
                 )
             }
 
@@ -124,9 +126,9 @@ fun SignUpScreen(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 OtpCodeField(
-                    code = code,
+                    code = state.code,
                     digits = 6,
-                    onCodeChange = { code = it }
+                    onCodeChange = viewModal::onCodeChange
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -143,7 +145,9 @@ fun SignUpScreen(
                         color = primary,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.clickable {
-                            // later: call backend resend code with email
+                            // same email, just re-call the api
+                            focusManager.clearFocus()
+                            viewModal.submitEmail()
                         }
                     )
                 }
@@ -151,20 +155,12 @@ fun SignUpScreen(
                 PrimaryButton(
                     text = "Verify",
                     onClick = {
-                        if (code.length > 5 && !isLoading) {
-                            focusManager.clearFocus()
-                            isLoading = true
-
-                            scope.launch {
-                                delay(3000)
-                                isLoading = false
-                                currentStep = SignUpStep.PASSWORD
-                            }
-                        }
+                        focusManager.clearFocus()
+                        viewModal.verifyCode()
                     },
-                    enabled = code.length > 5,
+                    enabled = state.code.length >= 6 && !state.isLoading,
                     modifier = Modifier.padding(top = 20.dp),
-                    isLoading = isLoading,
+                    isLoading = state.isLoading
                 )
             }
 
@@ -172,8 +168,8 @@ fun SignUpScreen(
                 Text(text = "Set Password", fontSize = 16.sp, color = white)
                 Spacer(modifier = Modifier.height(4.dp))
                 InputField(
-                    value = password,
-                    onValueChange = { password = it },
+                    value = state.password,
+                    onValueChange = viewModal::onPasswordChange,
                     placeholder = "password",
                     isPassword = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -181,20 +177,12 @@ fun SignUpScreen(
                 PrimaryButton(
                     text = "Create Account",
                     onClick = {
-                        if (password.isNotBlank() && !isLoading) {
-                            focusManager.clearFocus()
-                            isLoading = true
-
-                            scope.launch {
-                                delay(3000)
-                                isLoading = false
-                                OnSignInComplete()
-                            }
-                        }
+                        focusManager.clearFocus()
+                        viewModal.completeSignUp()
                     },
-                    enabled = password.isNotBlank(),
+                    enabled = state.password.isNotBlank() && !state.isLoading,
                     modifier = Modifier.padding(top = 20.dp),
-                    isLoading = isLoading
+                    isLoading = state.isLoading
                 )
             }
         }

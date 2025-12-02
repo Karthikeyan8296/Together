@@ -47,7 +47,8 @@ fun NavGraphBuilder.authNavGraph(
         popExitTransition = NavTransitions.slideOutToRight
     ) {
         LoginScreen(
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            onLoginComplete = { navController.navigate(Routes.ONBOARDING_GRAPH) }
         )
     }
 
@@ -59,7 +60,7 @@ fun NavGraphBuilder.authNavGraph(
     ) {
         SignUpScreen(
             paddingValues = paddingValues,
-            OnSignInComplete = { navController.navigate(Routes.ONBOARDING_GRAPH) }
+            onSignInComplete = { navController.navigate(Routes.ONBOARDING_GRAPH) }
         )
     }
 }

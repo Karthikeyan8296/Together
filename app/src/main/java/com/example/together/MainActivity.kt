@@ -16,7 +16,9 @@ import com.example.together.core.navigation.RootNavGraph
 import com.example.together.core.navigation.Routes
 import com.example.together.ui.theme.TogetherTheme
 import com.example.together.ui.theme.backgroundPrimary
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
