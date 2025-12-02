@@ -46,3 +46,15 @@ export interface PrimaryButtonProps extends TouchableOpacityProps {
   bg_color?: string;
   text_color?: string;
 }
+
+export type ImageUploadProps = {
+  file?: any;
+  onSelect: (file: any) => void;
+  onClear: () => void;
+  containerStyle?: ViewStyle;
+  aspectRatio?: [number, number];
+  allowEditing?: boolean;
+  imageStyle?: ViewStyle;
+  placeholder?: string;
+  borderRadius?: any;
+};

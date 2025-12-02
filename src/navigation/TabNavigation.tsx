@@ -39,7 +39,7 @@ const TabNavigation = () => {
 
   return (
     <Tab.Navigator
-      initialRouteName={ROUTES.HOME_STACK}
+      initialRouteName={ROUTES.CREATE_EVENT_STACK}
       // Use animated tab bar instead of the default one
       tabBar={(props) => (
         <AnimatedTabBar {...props} hiddenRoutes={hiddenRoutes} />
@@ -68,7 +68,7 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name={"dicover"}
+        name={ROUTES.DISCOVER_STACK}
         component={Discover}
         options={{
           tabBarIcon: ({ color }) => <Compass color={color} />,
@@ -76,7 +76,7 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name={"event"}
+        name={ROUTES.CREATE_EVENT_STACK}
         component={CreateEvent}
         options={{
           tabBarIcon: ({ color }) => <CirclePlus color={color} />,
@@ -84,7 +84,7 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name={"notification"}
+        name={ROUTES.NOTIFICATION_STACK}
         component={Notification}
         options={{
           tabBarIcon: ({ color }) => <Heart color={color} />,
@@ -92,7 +92,7 @@ const TabNavigation = () => {
         }}
       />
       <Tab.Screen
-        name={"profile"}
+        name={ROUTES.PROFILE_STACK}
         component={Profile}
         options={{
           tabBarIcon: ({ color }) => <UserCircle color={color} />,

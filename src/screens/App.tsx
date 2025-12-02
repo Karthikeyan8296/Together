@@ -1,7 +1,9 @@
 import { store } from "@/redux/store";
+import NetInfo from "@react-native-community/netinfo";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   focusManager,
+  onlineManager,
   QueryClient,
   QueryClientProvider,
 } from "@tanstack/react-query";
@@ -27,10 +29,9 @@ const App = () => {
   });
   if (!fontLoaded) return null;
 
-  //TODO: need to take dev build again to make this work
-  // onlineManager.setEventListener((setOnline) =>
-  //   NetInfo.addEventListener((state) => setOnline(!!state.isConnected))
-  // );
+  onlineManager.setEventListener((setOnline) =>
+    NetInfo.addEventListener((state) => setOnline(!!state.isConnected))
+  );
 
   focusManager.setEventListener((handleFocus) => {
     const subscribe = AppState.addEventListener("change", (status) =>

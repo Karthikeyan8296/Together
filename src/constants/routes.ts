@@ -15,6 +15,10 @@ export default {
   ONBOARDING_3: "Onboarding 3",
 
   HOME_STACK: "home stack",
+  DISCOVER_STACK: "discover stack",
+  CREATE_EVENT_STACK: "create event stack",
+  NOTIFICATION_STACK: "notification stack",
+  PROFILE_STACK: "profile stack",
   HOME: "home screen",
   ALL_EVENTS: "all events",
   EVENT_DETAIL: "event details",
