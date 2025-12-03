@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.navigation
+import com.example.together.core.navigation.app.AppRoutes
+import com.example.together.core.navigation.app.appNavGraph
 import com.example.together.core.navigation.auth.AuthRoutes
 import com.example.together.core.navigation.auth.authNavGraph
 import com.example.together.core.navigation.onBoarding.OnBoardingRoutes
@@ -32,6 +34,16 @@ fun RootNavGraph(
             startDestination = OnBoardingRoutes.ONBOARDING_1
         ) {
             onBoardingNavGraph(
+                navController = navController,
+                paddingValues = paddingValues
+            )
+        }
+
+        //APP GRAPH
+        navigation<Routes.APP_GRAPH>(
+            startDestination = AppRoutes.HOME
+        ) {
+            appNavGraph(
                 navController = navController,
                 paddingValues = paddingValues
             )

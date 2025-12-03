@@ -22,7 +22,7 @@ object AppModule {
     fun provideRetrofit(): Retrofit {
         return Retrofit.Builder()
             //emulator -> localHost
-            .baseUrl("http://10.77.120.184:5500/api/v1/")
+            .baseUrl("http://192.168.1.7:5500/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(OkHttpClient.Builder().build())
             .build()

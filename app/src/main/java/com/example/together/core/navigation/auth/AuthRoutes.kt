@@ -15,5 +15,4 @@ sealed interface AuthRoutes {
 
     @Serializable
     data object SIGNUP_SCREEN : AuthRoutes
-
 }

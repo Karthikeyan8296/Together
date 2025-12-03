@@ -2,6 +2,7 @@ package com.example.together.feature.auth.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.together.data.local.dataStore.AuthDataStore
 import com.example.together.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,8 @@ data class SignUpUiState(
 
 @HiltViewModel
 class SignUpViewModal @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val authDataStore: AuthDataStore
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpUiState())
@@ -115,7 +117,13 @@ class SignUpViewModal @Inject constructor(
         viewModelScope.launch {
             authRepository.signUp(token, password)
                 .onSuccess { res ->
-                    // TODO: store res.accessToken & res.refreshToken in DataStore/SecureStorage
+                    authDataStore.saveTokens(
+                        accessToken = res.accessToken,
+                        refreshToken = res.accessToken,
+                        email = res.user.email,
+                        id = res.user.id
+                    )
+
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isSignedUp = true
@@ -130,8 +138,8 @@ class SignUpViewModal @Inject constructor(
         }
     }
 
-    fun consumeSignedUpFlag(){
-        if(_uiState.value.isSignedUp){
+    fun consumeSignedUpFlag() {
+        if (_uiState.value.isSignedUp) {
             _uiState.value = _uiState.value.copy(isSignedUp = false)
         }
     }

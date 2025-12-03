@@ -2,6 +2,10 @@ package com.example.together.data.remote.api
 
 import com.example.together.data.remote.dto.LoginRequest
 import com.example.together.data.remote.dto.LoginResponse
+import com.example.together.data.remote.dto.LogoutRequest
+import com.example.together.data.remote.dto.LogoutResponse
+import com.example.together.data.remote.dto.RefreshRequest
+import com.example.together.data.remote.dto.RefreshResponse
 import com.example.together.data.remote.dto.SendOtpRequest
 import com.example.together.data.remote.dto.SendOtpResponse
 import com.example.together.data.remote.dto.SignUpRequest
@@ -31,4 +35,14 @@ interface AuthAPI {
     suspend fun login(
         @Body body: LoginRequest
     ): LoginResponse
+
+    @POST("auth/logout")
+    suspend fun logout(
+        @Body body: LogoutRequest
+    ): LogoutResponse
+
+    @POST("auth/refresh")
+    suspend fun refresh(
+        @Body body: RefreshRequest
+    ): RefreshResponse
 }
