@@ -38,7 +38,7 @@ class SignUpViewModal @Inject constructor(
     val uiState: StateFlow<SignUpUiState> = _uiState.asStateFlow()
 
     //temp storing
-    private var signupToken: String? = null;
+    private var signupToken: String? = null
 
     fun onEmailChange(value: String) {
         _uiState.value = _uiState.value.copy(email = value, error = null)

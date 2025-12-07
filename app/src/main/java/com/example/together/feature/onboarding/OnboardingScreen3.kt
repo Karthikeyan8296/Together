@@ -20,6 +20,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,9 +46,9 @@ fun OnboardingScreen3(
     navController: NavHostController,
     viewModal: OnboardingViewModel
 ) {
-    var company by remember { mutableStateOf("") }
-    var designation by remember { mutableStateOf("") }
-    var yearsOfExp by remember { mutableStateOf(0f) }
+    var company by rememberSaveable { mutableStateOf(viewModal.companyName) }
+    var designation by rememberSaveable { mutableStateOf(viewModal.designation) }
+    var yearsOfExp by rememberSaveable { mutableStateOf(viewModal.experience.toFloat()) }
     // label above slider (Fresher / X years)
     val yearsText = when (yearsOfExp.toInt()) {
         0 -> "Fresher"

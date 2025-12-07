@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import com.example.together.core.navigation.NavTransitions
+import com.example.together.core.navigation.Routes
 import com.example.together.feature.onboarding.OnboardingScreen1
 import com.example.together.feature.onboarding.OnboardingScreen2
 import com.example.together.feature.onboarding.OnboardingScreen3
@@ -22,7 +23,11 @@ fun NavGraphBuilder.onBoardingNavGraph(
         enterTransition = NavTransitions.slideInFromRight,
         popExitTransition = NavTransitions.slideOutToRight
     ) { backStackEntry ->
-        val onBoardingViewModel: OnboardingViewModel = hiltViewModel(backStackEntry)
+        // Scope ViewModel to the ONBOARDING_GRAPH parent
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Routes.ONBOARDING_GRAPH)
+        }
+        val onBoardingViewModel: OnboardingViewModel = hiltViewModel(parentEntry)
         OnboardingScreen1(
             paddingValues = paddingValues,
             viewModal = onBoardingViewModel,
@@ -36,9 +41,9 @@ fun NavGraphBuilder.onBoardingNavGraph(
         enterTransition = NavTransitions.slideInFromRight,
         popExitTransition = NavTransitions.slideOutToRight
     ) { backStackEntry ->
-        //Reuse SAME ViewModel from ONBOARDING_1
-        val parentEntry = remember {
-            navController.getBackStackEntry(OnBoardingRoutes.ONBOARDING_1)
+        //Same parent entry → same ViewModel instance
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Routes.ONBOARDING_GRAPH)
         }
         val onboardingViewModel: OnboardingViewModel = hiltViewModel(parentEntry)
         OnboardingScreen2(
@@ -52,13 +57,12 @@ fun NavGraphBuilder.onBoardingNavGraph(
         popEnterTransition = NavTransitions.scaleInFromCenter,
         enterTransition = NavTransitions.slideInFromRight,
         popExitTransition = NavTransitions.slideOutToRight
-    ) {
+    ) {backStackEntry ->
         // Same shared ViewModel again
-        val parentEntry = remember {
-            navController.getBackStackEntry(OnBoardingRoutes.ONBOARDING_1)
+        val parentEntry = remember(backStackEntry) {
+            navController.getBackStackEntry(Routes.ONBOARDING_GRAPH)
         }
-        val onboardingViewModel: OnboardingViewModel =
-            hiltViewModel(parentEntry)
+        val onboardingViewModel: OnboardingViewModel = hiltViewModel(parentEntry)
         OnboardingScreen3(
             paddingValues = paddingValues,
             navController = navController,

@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -33,8 +34,8 @@ fun OnboardingScreen2(
     viewModal: OnboardingViewModel
 ) {
 
-    var link by remember { mutableStateOf("") }
-    var selectedExpertise by remember { mutableStateOf(setOf<String>()) }
+    var link by rememberSaveable { mutableStateOf(viewModal.linkedin) }
+    var selectedExpertise by rememberSaveable { mutableStateOf(viewModal.expertise) }
 
     val focusManager = LocalFocusManager.current
 

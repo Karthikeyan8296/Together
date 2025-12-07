@@ -1,10 +1,8 @@
 package com.example.together.core.network
 
 import com.example.together.data.local.dataStore.AuthDataStore
-import com.example.together.data.remote.api.AuthAPI
 import com.example.together.data.remote.api.TokenAPI
 import com.example.together.data.remote.dto.RefreshRequest
-import com.example.together.domain.repository.AuthRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator

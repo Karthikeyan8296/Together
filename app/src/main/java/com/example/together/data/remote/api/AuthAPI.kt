@@ -6,8 +6,6 @@ import com.example.together.data.remote.dto.LogoutRequest
 import com.example.together.data.remote.dto.LogoutResponse
 import com.example.together.data.remote.dto.OnboardingRequest
 import com.example.together.data.remote.dto.OnboardingResponse
-import com.example.together.data.remote.dto.RefreshRequest
-import com.example.together.data.remote.dto.RefreshResponse
 import com.example.together.data.remote.dto.SendOtpRequest
 import com.example.together.data.remote.dto.SendOtpResponse
 import com.example.together.data.remote.dto.SignUpRequest
