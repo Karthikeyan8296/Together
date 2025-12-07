@@ -3,6 +3,7 @@ package com.example.together.data.local.dataStore
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -22,7 +23,8 @@ data class AuthTokens(
     val accessToken: String?,
     val refreshToken: String?,
     val email: String?,
-    val id: String?
+    val id: String?,
+    val onBoardingStatus: Boolean = false
 ) {
     val isLoggedIn: Boolean get() = !accessToken.isNullOrBlank() && !refreshToken.isNullOrBlank()
 }
@@ -36,6 +38,7 @@ class AuthDataStore @Inject constructor(
         val REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val EMAIL = stringPreferencesKey("email")
         val ID = stringPreferencesKey("id")
+        val ONBOARDING_STATUS = booleanPreferencesKey("onboarding_status")
     }
 
     val authTokens: Flow<AuthTokens> = context.authDataStore.data.map { pref ->
@@ -43,16 +46,29 @@ class AuthDataStore @Inject constructor(
             accessToken = pref[Keys.ACCESS_TOKEN],
             refreshToken = pref[Keys.REFRESH_TOKEN],
             email = pref[Keys.EMAIL],
-            id = pref[Keys.ID]
+            id = pref[Keys.ID],
+            onBoardingStatus = pref[Keys.ONBOARDING_STATUS] ?: false
         )
     }
 
-    suspend fun saveTokens(accessToken: String, refreshToken: String, email: String, id: String) {
+    suspend fun saveTokens(
+        accessToken: String,
+        refreshToken: String,
+        email: String,
+        id: String,
+    ) {
         context.authDataStore.edit { pref ->
             pref[Keys.ACCESS_TOKEN] = accessToken
             pref[Keys.REFRESH_TOKEN] = refreshToken
             pref[Keys.EMAIL] = email
             pref[Keys.ID] = id
+
+        }
+    }
+
+    suspend fun updateOnboardingStatus(status: Boolean) {
+        context.authDataStore.edit { pref ->
+            pref[Keys.ONBOARDING_STATUS] = status
         }
     }
 
@@ -62,6 +78,7 @@ class AuthDataStore @Inject constructor(
             pref.remove(Keys.REFRESH_TOKEN)
             pref.remove(Keys.EMAIL)
             pref.remove(Keys.ID)
+            pref.remove(Keys.ONBOARDING_STATUS)
         }
     }
 }

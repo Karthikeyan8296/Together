@@ -1,7 +1,5 @@
 package com.example.together.data.remote.dto
 
-import com.example.together.data.local.dataStore.AuthTokens
-
 data class UserDto(
     val id: String,
     val email: String,
@@ -66,4 +64,19 @@ data class RefreshRequest(
 data class RefreshResponse(
     val accessToken: String,
     val refreshToken: String
+)
+
+data class OnboardingRequest(
+    val fullName: String,
+    val phoneNumber: String,
+    val location: String,
+    val linkedin: String,
+    val expertise: String, // comma-joined
+    val CompanyName: String,
+    val Designation: String,
+    val yearOfExperience: Int
+)
+
+data class OnboardingResponse(
+    val message: String
 )

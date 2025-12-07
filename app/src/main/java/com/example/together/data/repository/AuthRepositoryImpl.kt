@@ -2,6 +2,7 @@ package com.example.together.data.repository
 
 import com.example.together.data.local.dataStore.AuthDataStore
 import com.example.together.data.remote.api.AuthAPI
+import com.example.together.data.remote.api.TokenAPI
 import com.example.together.data.remote.dto.LoginRequest
 import com.example.together.data.remote.dto.LoginResponse
 import com.example.together.data.remote.dto.LogoutRequest
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
     private val API: AuthAPI,
+    private val tokenAPI: TokenAPI,
     private val authDataStore: AuthDataStore
 ) : AuthRepository {
     //returns nothing (useless)
@@ -57,7 +59,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun refreshToken(refreshToken: String): Result<RefreshResponse> =
         runCatching {
-            API.refresh(RefreshRequest(refreshToken))
+            tokenAPI.refresh(RefreshRequest(refreshToken))
         }.onSuccess { res ->
             //update stored token, but keep the email and id as same
             val current = authDataStore.authTokens.first()

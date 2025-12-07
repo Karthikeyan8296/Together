@@ -1,4 +1,4 @@
-package com.example.together.feature.onboarding.OnboardingScreen3
+package com.example.together.feature.onboarding
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,15 +16,20 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.together.core.navigation.Routes
+import com.example.together.core.navigation.onBoarding.OnBoardingRoutes
 import com.example.together.feature.common.components.Header
 import com.example.together.feature.common.components.InputField
 import com.example.together.feature.common.components.PrimaryButton
@@ -37,7 +42,8 @@ import com.example.together.ui.theme.white
 fun OnboardingScreen3(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    handleContinue: () -> Unit
+    navController: NavHostController,
+    viewModal: OnboardingViewModel
 ) {
     var company by remember { mutableStateOf("") }
     var designation by remember { mutableStateOf("") }
@@ -51,6 +57,18 @@ fun OnboardingScreen3(
     }
     val focusManager = LocalFocusManager.current
     val isAllFieldFilled = company.isNotBlank() && designation.isNotBlank() && yearsOfExp >= 0f
+
+    val isLoading = viewModal.isLoading
+    val isSuccess = viewModal.isSuccess
+    val error = viewModal.error
+
+    LaunchedEffect(isSuccess) {
+        if (isSuccess) {
+            navController.navigate(Routes.APP_GRAPH) {
+                popUpTo(OnBoardingRoutes.ONBOARDING_1) { inclusive = true }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -134,13 +152,29 @@ fun OnboardingScreen3(
                 color = light_white
             )
         }
+
+        if (error != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(error, color = Color.Red, fontSize = 12.sp)
+        }
+
         PrimaryButton(
             text = "Continue",
-            onClick = handleContinue,
-            enabled = isAllFieldFilled,
+            enabled = isAllFieldFilled && !isLoading,
+            isLoading = isLoading,
+            onClick = {
+                viewModal.saveOnboarding3(
+                    company, designation, yearsOfExp.toInt()
+                )
+                viewModal.submitOnboarding()
+            },
             modifier = Modifier.padding(top = 20.dp)
         )
 
+        PrimaryButton(
+            text = "Logout",
+            onClick = viewModal::logout
+        )
 //        CircularWavyProgressIndicator()
     }
 }

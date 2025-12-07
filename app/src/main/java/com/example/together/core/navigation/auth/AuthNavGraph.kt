@@ -48,10 +48,14 @@ fun NavGraphBuilder.authNavGraph(
     ) {
         LoginScreen(
             paddingValues = paddingValues,
-            onLoginComplete = {
-                //changes
-                navController.navigate(Routes.ONBOARDING_GRAPH) {
-                    popUpTo(Routes.AUTH_GRAPH) {//clear the auth graph
+            onLoginComplete = { isOnboarded ->
+                val target = if (isOnboarded) {
+                    Routes.APP_GRAPH
+                } else {
+                    Routes.ONBOARDING_GRAPH
+                }
+                navController.navigate(target) {
+                    popUpTo(Routes.AUTH_GRAPH) {//clear the auth
                         inclusive = true
                     }
                 }

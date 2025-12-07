@@ -37,7 +37,7 @@ class LoginViewModal @Inject constructor(
         _uiState.value = _uiState.value.copy(password = value, error = null)
     }
 
-    fun handleLogin() {
+    fun handleLogin(onSuccessNavigate: (Boolean) -> Unit) {
         val email = _uiState.value.email
         val password = _uiState.value.password
 
@@ -49,14 +49,19 @@ class LoginViewModal @Inject constructor(
                 .onSuccess { res ->
                     authDataStore.saveTokens(
                         accessToken = res.accessToken,
-                        refreshToken = res.accessToken,
+                        refreshToken = res.refreshToken,
                         email = res.user.email,
-                        id = res.user.id
+                        id = res.user.id,
+                    )
+                    authDataStore.updateOnboardingStatus(
+                        status = res.isOnboarded
                     )
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,
                         isLoggedIn = true
                     )
+
+                    onSuccessNavigate(res.isOnboarded)  //pass this for success status as lamba
                 }.onFailure { e ->
                     _uiState.value = _uiState.value.copy(
                         isLoading = false,

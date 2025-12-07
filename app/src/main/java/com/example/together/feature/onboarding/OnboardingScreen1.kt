@@ -1,4 +1,4 @@
-package com.example.together.feature.onboarding.OnboardingScreen1
+package com.example.together.feature.onboarding
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.together.feature.common.components.Header
 import com.example.together.feature.common.components.InputField
 import com.example.together.feature.common.components.LocationPicker
@@ -32,7 +33,8 @@ import com.example.together.ui.theme.white
 fun OnboardingScreen1(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    handleContinue: () -> Unit
+    handleContinue: () -> Unit,
+    viewModal: OnboardingViewModel
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var phoneNumber by rememberSaveable { mutableStateOf("") }
@@ -99,7 +101,12 @@ fun OnboardingScreen1(
 
         PrimaryButton(
             text = "Continue",
-            onClick = handleContinue,
+            onClick = {
+                viewModal.saveOnboarding1(
+                    name, phoneNumber, location!!
+                )
+                handleContinue()
+            },
             enabled = isAllFieldFilled,
             modifier = Modifier.padding(top = 16.dp)
         )

@@ -16,7 +16,7 @@ class AuthHeaderInterceptor @Inject constructor(
 
         //Don't add auth header to the auth endpoints
         val path = original.url.encodedPath
-        if (path.startsWith("/api/v1/auth")) {
+        if (path.startsWith("/auth")) {
             return chain.proceed(original)
         }
 

@@ -11,6 +11,7 @@ import com.example.together.core.navigation.auth.AuthRoutes
 import com.example.together.core.navigation.auth.authNavGraph
 import com.example.together.core.navigation.onBoarding.OnBoardingRoutes
 import com.example.together.core.navigation.onBoarding.onBoardingNavGraph
+import com.example.together.feature.common.states.LoadingAnimation
 
 @Composable
 fun RootNavGraph(
@@ -18,6 +19,11 @@ fun RootNavGraph(
     paddingValues: PaddingValues,
     startDestination: Routes
 ) {
+    if (startDestination == Routes.LOADING) {
+        LoadingAnimation()
+        return
+    }
+
     NavHost(navController = navController, startDestination = startDestination) {
         //AUTH GRAPH
         navigation<Routes.AUTH_GRAPH>(

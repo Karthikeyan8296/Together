@@ -12,4 +12,7 @@ sealed interface Routes {
 
     @Serializable
     data object APP_GRAPH: Routes
+
+    @Serializable
+    data object LOADING: Routes
 }

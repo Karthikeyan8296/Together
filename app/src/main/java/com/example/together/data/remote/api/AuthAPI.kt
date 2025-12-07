@@ -4,6 +4,8 @@ import com.example.together.data.remote.dto.LoginRequest
 import com.example.together.data.remote.dto.LoginResponse
 import com.example.together.data.remote.dto.LogoutRequest
 import com.example.together.data.remote.dto.LogoutResponse
+import com.example.together.data.remote.dto.OnboardingRequest
+import com.example.together.data.remote.dto.OnboardingResponse
 import com.example.together.data.remote.dto.RefreshRequest
 import com.example.together.data.remote.dto.RefreshResponse
 import com.example.together.data.remote.dto.SendOtpRequest
@@ -41,8 +43,8 @@ interface AuthAPI {
         @Body body: LogoutRequest
     ): LogoutResponse
 
-    @POST("auth/refresh")
-    suspend fun refresh(
-        @Body body: RefreshRequest
-    ): RefreshResponse
+    @POST("user/onBoarding")
+    suspend fun createOnBoarding(
+        @Body body: OnboardingRequest
+    ): OnboardingResponse
 }

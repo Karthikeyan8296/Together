@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -33,19 +32,13 @@ import com.example.together.ui.theme.white
 fun LoginScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    onLoginComplete: () -> Unit,
+    onLoginComplete: (Boolean) -> Unit,
     viewModal: LoginViewModal = hiltViewModel()
 ) {
 
     val focusManager = LocalFocusManager.current
 
     val state by viewModal.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(state.isLoggedIn) {
-        if(state.isLoggedIn){
-            onLoginComplete()
-        }
-    }
 
     Column(
         modifier = Modifier
@@ -99,7 +92,9 @@ fun LoginScreen(
             text = "Login",
             onClick = {
                 focusManager.clearFocus()
-                viewModal.handleLogin()
+                viewModal.handleLogin { isOnboarded ->
+                    onLoginComplete(isOnboarded)
+                }
             },
             enabled = state.email.isNotBlank() && state.password.isNotBlank() && !state.isLoading,
             modifier = Modifier.padding(top = 20.dp),

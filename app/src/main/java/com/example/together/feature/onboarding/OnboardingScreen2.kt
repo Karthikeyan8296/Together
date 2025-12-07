@@ -1,4 +1,4 @@
-package com.example.together.feature.onboarding.OnboardingScreen2
+package com.example.together.feature.onboarding
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -29,7 +29,8 @@ import com.example.together.ui.theme.white
 fun OnboardingScreen2(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    handleContinue: () -> Unit
+    handleContinue: () -> Unit,
+    viewModal: OnboardingViewModel
 ) {
 
     var link by remember { mutableStateOf("") }
@@ -106,10 +107,14 @@ fun OnboardingScreen2(
 
         PrimaryButton(
             text = "Continue",
-            onClick = handleContinue,
+            onClick = {
+                viewModal.saveOnboarding2(
+                    link, selectedExpertise
+                )
+                handleContinue()
+            },
             enabled = isAllFieldFilled,
             modifier = Modifier.padding(top = 20.dp)
         )
     }
-
 }

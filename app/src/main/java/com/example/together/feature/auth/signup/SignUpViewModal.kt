@@ -121,7 +121,7 @@ class SignUpViewModal @Inject constructor(
                         accessToken = res.accessToken,
                         refreshToken = res.accessToken,
                         email = res.user.email,
-                        id = res.user.id
+                        id = res.user.id,
                     )
 
                     _uiState.value = _uiState.value.copy(
