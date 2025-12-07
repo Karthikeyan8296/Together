@@ -49,7 +49,8 @@ fun NavGraphBuilder.authNavGraph(
         LoginScreen(
             paddingValues = paddingValues,
             onLoginComplete = {
-                navController.navigate(Routes.APP_GRAPH) {
+                //changes
+                navController.navigate(Routes.ONBOARDING_GRAPH) {
                     popUpTo(Routes.AUTH_GRAPH) {//clear the auth graph
                         inclusive = true
                     }
@@ -67,8 +68,9 @@ fun NavGraphBuilder.authNavGraph(
         SignUpScreen(
             paddingValues = paddingValues,
             onSignInComplete = {
-                navController.navigate(Routes.APP_GRAPH) {
-                    popUpTo(Routes.AUTH_GRAPH) {
+                //changes
+                navController.navigate(Routes.ONBOARDING_GRAPH) {
+                    popUpTo(Routes.AUTH_GRAPH) {//clear the auth graph
                         inclusive = true
                     }
                 }

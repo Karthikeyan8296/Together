@@ -23,7 +23,7 @@ class SessionViewModel @Inject constructor(
         viewModelScope.launch {
             authDataStore.authTokens.collect { tokens ->
                 _startDestination.value = if (tokens.isLoggedIn) {
-                    Routes.APP_GRAPH
+                    Routes.ONBOARDING_GRAPH
                 } else {
                     Routes.AUTH_GRAPH
                 }

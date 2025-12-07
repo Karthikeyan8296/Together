@@ -9,4 +9,7 @@ sealed interface OnBoardingRoutes {
 
     @Serializable
     data object ONBOARDING_2: OnBoardingRoutes
+
+    @Serializable
+    data object ONBOARDING_3: OnBoardingRoutes
 }

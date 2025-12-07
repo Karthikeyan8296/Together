@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import com.example.together.core.navigation.NavTransitions
 import com.example.together.feature.onboarding.OnboardingScreen1.OnboardingScreen1
 import com.example.together.feature.onboarding.OnboardingScreen2.OnboardingScreen2
+import com.example.together.feature.onboarding.OnboardingScreen3.OnboardingScreen3
 
 fun NavGraphBuilder.onBoardingNavGraph(
     navController: NavHostController,
@@ -19,7 +20,8 @@ fun NavGraphBuilder.onBoardingNavGraph(
         popExitTransition = NavTransitions.slideOutToRight
     ) {
         OnboardingScreen1(
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            handleContinue = { navController.navigate(OnBoardingRoutes.ONBOARDING_2) }
         )
     }
 
@@ -29,6 +31,19 @@ fun NavGraphBuilder.onBoardingNavGraph(
         enterTransition = NavTransitions.slideInFromRight,
         popExitTransition = NavTransitions.slideOutToRight
     ) {
-        OnboardingScreen2()
+        OnboardingScreen2(
+            paddingValues = paddingValues,
+            handleContinue = { navController.navigate(OnBoardingRoutes.ONBOARDING_3) })
+    }
+
+    composable<OnBoardingRoutes.ONBOARDING_3>(
+        exitTransition = NavTransitions.scaleOutToCenter,
+        popEnterTransition = NavTransitions.scaleInFromCenter,
+        enterTransition = NavTransitions.slideInFromRight,
+        popExitTransition = NavTransitions.slideOutToRight
+    ) {
+        OnboardingScreen3(
+            paddingValues = paddingValues,
+            handleContinue = {})
     }
 }

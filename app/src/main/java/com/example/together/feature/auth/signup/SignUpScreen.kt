@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -26,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.together.feature.common.components.Header
 import com.example.together.feature.common.components.InputField
 import com.example.together.feature.common.components.OtpCodeField
 import com.example.together.feature.common.components.PrimaryButton
@@ -67,7 +65,7 @@ fun SignUpScreen(
             }
             .padding(horizontal = 32.dp)
     ) {
-        Header()
+        Spacer(modifier = Modifier.height(60.dp))
         Text(
             text = "Create Your Account",
             fontSize = 24.sp,
