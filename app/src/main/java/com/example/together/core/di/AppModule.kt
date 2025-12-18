@@ -29,7 +29,7 @@ object AppModule {
     @Named("token")
     fun provideTokenRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:5500/api/v1/")
+            .baseUrl("http://192.168.1.2:5500/api/v1/")
 //            .baseUrl("https://together-server-mvkc.onrender.com/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -58,7 +58,7 @@ object AppModule {
     @Singleton
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.1.7:5500/api/v1/")
+            .baseUrl("http://192.168.1.2:5500/api/v1/")
 //            .baseUrl("https://together-server-mvkc.onrender.com/api/v1/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)

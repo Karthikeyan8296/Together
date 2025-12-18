@@ -43,7 +43,8 @@ fun InputField(
     isPassword: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     singleLine: Boolean = true,
-    errorText: String? = null
+    errorText: String? = null,
+    leadingIcon: @Composable (() -> Unit)? = null
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -53,6 +54,7 @@ fun InputField(
 
     OutlinedTextField(
         value = value,
+        leadingIcon = leadingIcon,
         onValueChange = onValueChange,
         modifier = modifier
             .fillMaxWidth()

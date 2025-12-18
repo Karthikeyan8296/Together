@@ -14,7 +14,7 @@ import androidx.navigation.NavBackStackEntry
 
 object NavTransitions {
 
-    private const val NAV_ANIM_DURATION = 350
+    private const val NAV_ANIM_DURATION = 400
 
     // Onboarding <-> GetStarted (scale + fade)
     val scaleOutToCenter: AnimatedContentTransitionScope<NavBackStackEntry>.() -> ExitTransition = {
