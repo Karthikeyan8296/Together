@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,22 +39,11 @@ data class EventUiModel(
 fun HomeScreen(
     modifier: Modifier = Modifier,
     paddingValues: PaddingValues,
-    onLogout: () -> Unit,
     onSearchClick: () -> Unit,
     viewModal: HomeScreenViewModel = hiltViewModel(),
     onProfileClick: () -> Unit
 ) {
-
     val state by viewModal.uiState.collectAsStateWithLifecycle()
-    val isLoggedOut by viewModal.isLoggedOut.collectAsStateWithLifecycle()
-
-    LaunchedEffect(isLoggedOut) {
-        if (isLoggedOut) {
-            onLogout()
-            viewModal.consumeLogout()
-        }
-    }
-
     val tabs = listOf(
         HomeCategoryTab("for_you", "For You", R.drawable.for_you),
         HomeCategoryTab("tech", "Tech", R.drawable.code),

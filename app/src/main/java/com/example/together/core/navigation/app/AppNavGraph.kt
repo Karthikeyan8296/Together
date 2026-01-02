@@ -25,13 +25,6 @@ fun NavGraphBuilder.appNavGraph(
     ) {
         HomeScreen(
             paddingValues = paddingValues,
-            onLogout = {
-                navController.navigate(Routes.AUTH_GRAPH) {
-                    popUpTo(Routes.APP_GRAPH) {
-                        inclusive = true
-                    }
-                }
-            },
             onSearchClick = { navController.navigate(AppRoutes.SEARCH) },
             onProfileClick = { navController.navigate(AppRoutes.PROFILE) }
         )
@@ -52,6 +45,15 @@ fun NavGraphBuilder.appNavGraph(
         enterTransition = slideInFromRight,
         popExitTransition = slideOutToRight
     ) {
-        ProfileScreen(paddingValues = paddingValues)
+        ProfileScreen(
+            paddingValues = paddingValues,
+            onLogout = {
+                navController.navigate(Routes.AUTH_GRAPH) {
+                    popUpTo(Routes.APP_GRAPH) {
+                        inclusive = true
+                    }
+                }
+            },
+        )
     }
 }

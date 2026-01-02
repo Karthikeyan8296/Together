@@ -28,9 +28,6 @@ class HomeScreenViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
-    private val _isLoggedOut = MutableStateFlow(false)
-    val isLoggedOut: StateFlow<Boolean> = _isLoggedOut.asStateFlow()
-
     //we are using init here because when the screen is opened, this will be launched
     init {
         viewModelScope.launch {
@@ -43,35 +40,5 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
-        viewModelScope.launch {
-            val token = authDataStore.authTokens.first()
-            val refreshToken = token.refreshToken
 
-            if (refreshToken.isNullOrBlank()) {
-                authDataStore.clearTokens()
-                _isLoggedOut.value = true
-                return@launch
-            }
-
-            _uiState.value = _uiState.value.copy(isLoading = true, error = null)
-
-            authRepository.logout(refreshToken)
-                .onSuccess {
-                    _uiState.value = _uiState.value.copy(isLoading = false)
-                    _isLoggedOut.value = true
-                }
-                .onFailure { e ->
-                    _uiState.value =
-                        _uiState.value.copy(isLoading = true, error = e.message ?: "Logout Failed")
-                    _isLoggedOut.value = false
-                }
-        }
-    }
-
-    fun consumeLogout() {
-        if (_isLoggedOut.value) {
-            _isLoggedOut.value = false
-        }
-    }
 }
